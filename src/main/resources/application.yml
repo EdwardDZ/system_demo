@@ -1,0 +1,90 @@
+#-- server config --#
+server:
+  port: 10040
+
+#-- shiro config --#
+shiro:
+  loginUrl: /login
+  jessionid: sessionId
+  
+#-- datasource config --#
+spring:
+  application:  
+    name: system_demo
+  mvc:
+    static-path-pattern: /static/**
+  freemarker:
+    allow-request-override: false
+    cache: false
+    check-template-location: true
+    charset: UTF-8
+    content-type: text/html; charset=utf-8
+    expose-request-attributes: false
+    expose-session-attributes: false
+    expose-spring-macro-helpers: false
+    suffix: .ftl
+    template-loader-path: classpath:/templates
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/irs1?useSSL=false&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    # 下面为连接池的补充设置，应用到上面所有数据源中
+    # 初始化大小，最小，最大
+    initialSize: 1
+    minIdle: 3
+    maxActive: 20
+    # 配置获取连接等待超时的时间
+    maxWait: 60000
+    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    timeBetweenEvictionRunsMillis: 60000
+    # 配置一个连接在池中最小生存的时间，单位是毫秒
+    minEvictableIdleTimeMillis: 30000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    # 打开PSCache，并且指定每个连接上PSCache的大小
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    filters: stat,wall,slf4j
+    # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    # 合并多个DruidDataSource的监控数据
+    useGlobalDataSourceStat: true
+  redis:
+    database: 0
+    timeout: 0
+    host: 192.168.163.128
+    port: 6379
+    password: 123
+    pool: 
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+  
+#-- 服务发现 config --#
+eureka:  
+  client:  
+    service-url:  
+      defaultZone: http://localhost:11112/eureka/
+      registerWithEureka: true
+      fetchRegistry: true
+  instance:  
+    prefer-ip-address: true 
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 2
+
+#-- log config --#
+logging:
+   path: log
+   file: ${logging.path}/system_demo.log
+   level: 
+    com.systemDemo: debug
+    
+#-- mybatis config --#
+mybatis:
+  mapper-locations: classpath:/mapping/**/*.xml
